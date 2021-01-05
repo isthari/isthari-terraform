@@ -1,2 +1,3 @@
-# Custom configuration
+# Configuration 
+# cloudRegionId = ""
 # shortId = ""

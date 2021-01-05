@@ -1,3 +1,4 @@
+variable "cloudRegionId" {}
 variable "shortId" {}
 
 variable "region" { 

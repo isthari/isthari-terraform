@@ -1,3 +1,4 @@
+variable "bucket" {}
 variable "cloudRegionId" {}
 variable "shortId" {}
 

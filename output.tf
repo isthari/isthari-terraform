@@ -16,6 +16,9 @@ locals {
     publicSubnet1id  = aws_subnet.public-1.id
     publicSubnet2id  = aws_subnet.public-2.id
     privateSubnet1id = aws_subnet.private-1.id
+
+    # ALB
+    albArn = aws_alb_listener.default.arn
   }
 }
 

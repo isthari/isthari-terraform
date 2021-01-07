@@ -4,7 +4,7 @@ resource "aws_route53_zone" "default" {
 
   provisioner "local-exec" {
     command = <<EOT
-	curl -X POST http://localhost/api/region-manager-aws/route53/upsert \
+	curl -X POST http://localhost/api/region-manager-aws/register/preupsert \
 		-H 'Content-Type: application/json' \
 		-H 'cloudRegionId: ${var.cloudRegionId}' \
 		-H 'shortId: ${var.shortId}' \
@@ -14,7 +14,8 @@ resource "aws_route53_zone" "default" {
     "dnsNs1" : "${aws_route53_zone.default.name_servers.0}",
     "dnsNs2" : "${aws_route53_zone.default.name_servers.1}",
     "dnsNs3" : "${aws_route53_zone.default.name_servers.2}",
-    "dnsNs4" : "${aws_route53_zone.default.name_servers.3}"
+    "dnsNs4" : "${aws_route53_zone.default.name_servers.3}",
+    "accountId": "${data.aws_caller_identity.current.account_id}"
 }'
 EOT
   }

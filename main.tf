@@ -6,3 +6,6 @@ provider "aws" {
 provider "local" {
   version = "~> 1.4"
 }
+
+data "aws_caller_identity" "current" {
+}

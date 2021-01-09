@@ -5,3 +5,4 @@
 
 # customization
 # bucket = ""
+metastorePassword = "changeme"

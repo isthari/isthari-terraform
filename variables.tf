@@ -1,4 +1,6 @@
 variable "bucket" {}
+variable "metastorePassword" {}
+
 variable "cloudRegionId" {}
 variable "shortId" {}
 
@@ -29,4 +31,18 @@ variable "vpc_public_2_net" {
 variable "vpc_private_1_net" {
   type    = string
   default = "10.240.2.0/24"
+}
+variable "vpc_private_2_net" {
+  type    = string
+  default = "10.240.3.0/24"
+}
+
+##
+## AUTOMATIC VARIABLES DO NOT MODIFY
+## 
+variable "metastore-image" {
+  type = map
+  default = {
+    us-east-1 = "ami-0b5e8a42fa961a4d2"
+  }
 }

@@ -24,7 +24,7 @@ resource "aws_rds_cluster" "metastore" {
   engine                    = "aurora-mysql"
   engine_mode               = "serverless"
   engine_version            = "5.7.mysql_aurora.2.07.1"
-  availability_zones        = [ "${var.region}a", "${var.region}b", "${var.region}c" ]
+  availability_zones        = [ "${var.region}a", "${var.region}b" ]
   database_name             = "metastore"
   master_username           = "metastore"
   master_password           = var.metastorePassword 
@@ -41,4 +41,10 @@ resource "aws_rds_cluster" "metastore" {
 
   vpc_security_group_ids = [aws_security_group.metastore-rds.id]
   db_subnet_group_name   = aws_db_subnet_group.default.name
+
+  lifecycle {
+    ignore_changes = [
+      availability_zones,
+    ]
+  }
 }

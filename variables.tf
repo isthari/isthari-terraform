@@ -9,6 +9,12 @@ variable "region" {
   default = "us-east-1" 
 }
 
+# key security
+variable "keyPair" {
+  type    = string
+  default = null
+}
+
 ###
 ### Network configuration
 ### 

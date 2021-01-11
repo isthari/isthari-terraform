@@ -8,9 +8,11 @@ resource "aws_iam_role" "isthari-remote-manager" {
   "Statement": [
     {
       "Effect": "Allow",
-      "Principal": {
-        "AWS": "arn:aws:iam::840227551083:root",
-        "AWS": "arn:aws:iam::840227551083:role/isthari-remote-manager"
+      "Principal": { 
+        "AWS": [
+	  "arn:aws:iam::840227551083:root",
+          "arn:aws:iam::840227551083:role/isthari-remote-manager"
+        ]
       },
       "Action": "sts:AssumeRole"
     }

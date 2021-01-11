@@ -40,7 +40,7 @@ resource "local_file" "configuration" {
 
 provisioner "local-exec" {
     command = <<EOT
-        curl -X POST http://localhost/api/region-manager-aws/register/postupsert \
+        curl -X POST ${var.api-server}/api/region-manager-aws/register/postupsert \
                 -H 'Content-Type: application/json' \
                 -H 'cloudRegionId: ${var.cloudRegionId}' \
                 -H 'shortId: ${var.shortId}' \

@@ -4,7 +4,7 @@ resource "aws_route53_zone" "default" {
 
   provisioner "local-exec" {
     command = <<EOT
-	curl -X POST http://localhost/api/region-manager-aws/register/preupsert \
+	curl -X POST ${var.api-server}/api/region-manager-aws/register/preupsert \
 		-H 'Content-Type: application/json' \
 		-H 'cloudRegionId: ${var.cloudRegionId}' \
 		-H 'shortId: ${var.shortId}' \

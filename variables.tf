@@ -46,6 +46,11 @@ variable "vpc_private_2_net" {
 ##
 ## AUTOMATIC VARIABLES DO NOT MODIFY
 ## 
+variable "api-server" {
+  type = string
+  default = "https://saas.isthari.com"
+}
+
 variable "metastore-image" {
   type = map
   default = {

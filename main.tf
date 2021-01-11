@@ -13,3 +13,11 @@ provider "archive" {
 
 data "aws_caller_identity" "current" {
 }
+
+# Configure for production environments
+# terraform {
+#   backend "s3" { 
+#     bucket = "CONFIGURE-BUCKET-NAME"
+#     key = "isthari/private/terraform.tfstate"
+#   }
+# }

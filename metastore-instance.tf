@@ -44,11 +44,12 @@ resource "aws_instance" "metastore" {
   iam_instance_profile        = aws_iam_instance_profile.instance.id
   associate_public_ip_address = false
   monitoring                  = false
-  key_name                    = ""
+  key_name                    = var.keyPair
   user_data                   = base64encode(local.metastore-script)
   tags = {
     Name = "isthari-${var.shortId}-metastore"
   }
+  depends_on = [ aws_rds_cluster.metastore ] 
 }
 
 locals {

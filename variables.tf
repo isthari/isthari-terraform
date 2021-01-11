@@ -1,5 +1,8 @@
 variable "bucket" {}
-variable "metastorePassword" {}
+variable "metastorePassword" {
+  type    = string
+  default = "changeme"
+}
 
 variable "cloudRegionId" {}
 variable "shortId" {}

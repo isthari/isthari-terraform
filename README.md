@@ -11,7 +11,7 @@ Terraform [Download](https://www.terraform.io/downloads.html)
 
 Your AWS credentials with administrator rights
 
-# Installation
+# Configuration
 
 Create a Cloud Region in the web interface and write down the following values:
 
@@ -59,3 +59,26 @@ Edit the file main.tf, uncomment the last block and configure the name of the S3
 * vpc_net, CIDR of the VPC to be deployed
 * vpc_public_1_net, vpc_public_2_net, CIDR for the public net. It should belong to the VPC range
 * vpc_private_1_net, vpc_private_2_net, CIDR for the public net. It should belong to the VPC range
+
+# Deployment
+
+To deploy your new environment just execute the following command:
+
+```
+terraform apply
+```
+
+The application will output a preview of the deployment plan and ask for confirmation
+```
+Plan: 69 to add, 0 to change, 0 to destroy.
+
+Do you want to perform these actions?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  Enter a value: 
+```
+
+Type yes and click enter to continue.
+
+Now go get yourself a cup of coffee while the process finishes, it's completely automatic

@@ -15,6 +15,7 @@ resource "aws_route53_zone" "default" {
     "dnsNs2" : "${aws_route53_zone.default.name_servers.1}",
     "dnsNs3" : "${aws_route53_zone.default.name_servers.2}",
     "dnsNs4" : "${aws_route53_zone.default.name_servers.3}",
+    "region": "${var.region}",
     "externalAccountId": "${data.aws_caller_identity.current.account_id}"
 }'
 EOT

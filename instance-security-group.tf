@@ -18,15 +18,15 @@ resource "aws_security_group_rule" "alb2instance" {
   source_security_group_id = aws_security_group.alb.id
 }
 
-#resource "aws_security_group_rule" "lambda2instance" {
-#  description              = "Lambda"
-#  type                     = "ingress"
-#  from_port                = 0
-#  to_port                  = 65535
-#  protocol                 = "tcp"
-#  security_group_id        = aws_security_group.instance.id
-#  source_security_group_id = aws_security_group.lambda.id
-#}
+resource "aws_security_group_rule" "lambda2instance" {
+  description              = "Lambda"
+  type                     = "ingress"
+  from_port                = 0
+  to_port                  = 65535
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.instance.id
+  source_security_group_id = aws_security_group.lambda.id
+}
 
 resource "aws_security_group_rule" "instance-self" {
   description              = "Internal communication"

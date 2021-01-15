@@ -135,14 +135,17 @@ let v1call = (path, method, headers, origin, queryStringParameters, body, hostna
             temp += key+"="+queryStringParameters[key]
         })
         console.log(temp)
-        console.log("---")
+	console.log("***")
         finalUrl = finalUrl + "?" + temp
         console.log("final url "+finalUrl)
         
+        console.log("pre modify request headers");
+        console.log(headers);
+        
         delete headers.authorization
         delete headers.Authorization
-        //delete headers.host
-        //headers.host = hostname
+        delete headers.host
+        headers.host = hostname+":8080"
         
         axios({
             method: method,
@@ -154,11 +157,22 @@ let v1call = (path, method, headers, origin, queryStringParameters, body, hostna
         .then(function(response){
             var headersOut = response.headers;
             headersOut["Access-Control-Allow-Origin"] = origin
+            
+            var body;
+            if (path.startsWith("/ui")) {
+            	body = response.data;
+            } else {
+            	if (response.data.nextUri) {
+            		response.data.nextUri = response.data.nextUri.replace("http://"+hostname+":8080", "https://presto-master-cj7lmfbcet.sncc0rnbbo.cloud.isthari.com");
+            		console.log("changed next uri "+response.data.nextUri);
+            	}
+            
+            	body = JSON.stringify(response.data)
+            }
             var output = {
                 statusCode: response.status,
                 headers: headersOut,
-                body: JSON.stringify(response.data)
-                //body: response.data
+                body: body             
             }
             console.log(output)
             resolve(output)

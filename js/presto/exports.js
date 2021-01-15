@@ -144,6 +144,7 @@ let v1call = (path, method, headers, origin, queryStringParameters, body, hostna
         
         delete headers.authorization
         delete headers.Authorization
+        originalHost = headers.host;
         delete headers.host
         headers.host = hostname+":8080"
         
@@ -163,7 +164,7 @@ let v1call = (path, method, headers, origin, queryStringParameters, body, hostna
             	body = response.data;
             } else {
             	if (response.data.nextUri) {
-            		response.data.nextUri = response.data.nextUri.replace("http://"+hostname+":8080", "https://presto-master-cj7lmfbcet.sncc0rnbbo.cloud.isthari.com");
+            		response.data.nextUri = response.data.nextUri.replace("http://"+hostname+":8080", "https://"+originalHost);
             		console.log("changed next uri "+response.data.nextUri);
             	}
             

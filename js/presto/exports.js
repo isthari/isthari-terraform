@@ -51,6 +51,19 @@ exports.handler = async (event) => {
           body: "OK"
       }  
     } else {
+        if (path.startsWith("/ui/dist")) {
+          path = path.replace("/ui/dist","");
+	  redirectUrl = "https://saas-content.isthari.com/content/presto/350"+path;
+	  console.log("redirect url: "+redirectUrl);
+	  return {
+              statusCode: 301,
+	      headers: {
+	          "Location": redirectUrl
+	      },
+	      body: "OK"
+	   }
+        }
+
         if (headers.Authorization == null && headers.authorization == null) {
             console.log("no authorization header")
             return {
@@ -148,19 +161,25 @@ let v1call = (path, method, headers, origin, queryStringParameters, body, hostna
         delete headers.host
         headers.host = hostname+":8080"
         
-        axios({
+        request = {
             method: method,
             url: finalUrl,
             headers: headers,
             data: body,
             timeout: 10000
-        })
+        };
+        
+        if (path.startsWith("/ui") && !path.startsWith("/ui/api")) {
+            request.responseType = 'blob'
+        }
+        
+        axios(request)
         .then(function(response){
             var headersOut = response.headers;
             headersOut["Access-Control-Allow-Origin"] = origin
             
             var body;
-            if (path.startsWith("/ui")) {
+            if (path.startsWith("/ui") && !path.startsWith("/ui/api")) {            	           
             	body = response.data;
             } else {
             	if (response.data.nextUri) {

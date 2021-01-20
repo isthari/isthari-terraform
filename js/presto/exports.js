@@ -125,7 +125,7 @@ let getHostname = (authorization, shortId) => {
         }).then(function(response){
             console.log("Retrieved hostname "+response.data)
             console.log(response.data)
-            resolve(response.data)
+            resolve(response.data.privateIp)
         }).catch(function(error){
             console.log("failure in authentication 2");
             reject(error)
@@ -206,7 +206,7 @@ let v1call = (path, method, headers, origin, queryStringParameters, body, hostna
                     } else {
                         reject(error)
                     }
-                }, 100);
+                }, 1000);
         })
     })
 }

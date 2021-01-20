@@ -183,6 +183,8 @@ let v1call = (path, method, headers, origin, queryStringParameters, body, hostna
             	body = response.data;
             } else {
             	if (response.data.nextUri) {
+            		console.log("original next uri: "+response.data.nextUri);
+            		console.log("original host: "+originalHost);
             		response.data.nextUri = response.data.nextUri.replace("http://"+hostname+":8080", "https://"+originalHost);
             		console.log("changed next uri "+response.data.nextUri);
             	}

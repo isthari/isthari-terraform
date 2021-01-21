@@ -205,13 +205,26 @@ let v1call = (path, method, headers, origin, queryStringParameters, body, hostna
         .catch(function(error){
             console.log("error call to presto backend")
             console.log(error);
-            setTimeout(function() {
+            
+            var response = error.response            	
+            if (response!=null && response.status >= 400) {
+                console.log("error fail fast "+ response.status);
+            	 var output = {
+                    statusCode: response.status,
+                    headers: response.headers,
+                    body: response.data             
+                }
+                console.log(output)
+                resolve(output)
+            } else {                       
+                setTimeout(function() {        	            	
                     if(tries<300) {
                         resolve(v1call(path, method, headers, origin, queryStringParameters, body, hostname, originalHost, 0))
                     } else {
                         reject(error)
                     }
                 }, 1000);
+            }
         })
     })
 }

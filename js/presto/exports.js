@@ -32,30 +32,20 @@ exports.handler = async (event) => {
         return optionsCheck;
     }
     
-
-        if (path.startsWith("/ui/dist")) {
-          path = path.replace("/ui/dist","");
-	  redirectUrl = "https://saas-content.isthari.com/content/presto/350"+path;
-	  console.log("redirect url: "+redirectUrl);
-	  return {
-              statusCode: 301,
-	      headers: {
-	          "Location": redirectUrl
-	      },
-	      body: "OK"
-	   }
-        }
-
+    var staticContentCheck = checkStaticContent(path)
+    if (staticContentCheck != null){
+        return staticContentCheck
+    }
+        
     var securityCheck = checkSecurity(headers);
     if (securityCheck != null){
         return securityCheck;
     }
         
-        return getHostname(headers, shortId)
-            .then(function(hostname){
-                return v1call(path, method, headers, origin, queryStringParameters, body, hostname, host, 0)
-            })
-
+    return getHostname(headers, shortId)
+        .then(function(hostname){
+            return v1call(path, method, headers, origin, queryStringParameters, body, hostname, host, 0)
+        })
 }
 
 function checkOrigin(headers) {
@@ -79,6 +69,22 @@ function checkOptions(method, origin) {
             },
             body: "OK"
         }  
+    }
+}
+
+function checkStaticContent(path) {
+    // TODO get version from server
+    if (path.startsWith("/ui/dist")) {
+        path = path.replace("/ui/dist","");
+	redirectUrl = "https://saas-content.isthari.com/content/presto/350"+path;
+	console.log("static content redirect url: "+redirectUrl);
+	return {
+            statusCode: 301,
+	    headers: {
+	        "Location": redirectUrl
+	    },
+	    body: "OK"
+        }
     }
 }
 

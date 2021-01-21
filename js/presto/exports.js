@@ -9,14 +9,7 @@ function containsKey(object, key) {
   return !!Object.keys(object).find(k => k.toLowerCase() === key.toLowerCase());
 }
 
-function createAuthenticateResponse() {
-    return {
-        statusCode: 401,
-        headers: {
-            "WWW-AUTHENTICATE" : "Basic realm='presto server'"
-        }
-    }
-}
+
 
 exports.handler = async (event) => {
     console.log(event)
@@ -64,35 +57,35 @@ exports.handler = async (event) => {
 	   }
         }
 
-        if (headers.Authorization == null && headers.authorization == null) {
-            console.log("no authorization header")
-            return {
-                statusCode: 401,
-                headers: {
-                    "WWW-Authenticate": "Basic realm=\"User Visible Realm\""
-                }
-            }
-        }
+    var securityCheck = checkSecurity(headers);
+    if (securityCheck != null){
+        return securityCheck;
+    }
         
-        var authorization = null
-        if (headers.Authorization != null){
-            authorization = headers.Authorization
-        } else {
-            authorization = headers.authorization
-        }
-        
-        return getHostname(authorization, shortId)
+        return getHostname(headers, shortId)
             .then(function(hostname){
                 return v1call(path, method, headers, origin, queryStringParameters, body, hostname, host, 0)
             })
     }
 }
 
-let getHostname = (authorization, shortId) => {
+function checkSecurity(headers) {
+    if (headers.authorization == null) {
+        console.log("no authorization header")
+        return {
+            statusCode: 401,
+                headers: {
+                    "WWW-Authenticate": "Basic realm=\"User Visible Realm\""
+                }
+        }
+    }    
+}
+
+let getHostname = (originalHeaders, shortId) => {
     return new Promise((resolve, reject) =>
     {
         var headers = {
-            "Authorization" : authorization
+            "Authorization" : originalHeaders.authorization
         }
         axios({
             method: "GET",

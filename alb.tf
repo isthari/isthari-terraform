@@ -9,6 +9,13 @@ resource "aws_security_group" "alb" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   egress {
     from_port       = 0
     to_port         = 65535
@@ -57,6 +64,21 @@ resource "aws_alb_listener" "default" {
       status_code = "HTTP_301"
     }
   }
+}
 
+# http to https redirect
+resource "aws_alb_listener" "default-http" {
+  load_balancer_arn = aws_lb.default.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type = "redirect"
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  } 
 }
 

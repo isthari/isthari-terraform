@@ -80,35 +80,12 @@ exports.handler = async (event) => {
         } else {
             authorization = headers.authorization
         }
-        return checkOrDeploy(authorization, shortId)
-            .then(function(){
-                return getHostname(authorization, shortId)
-            })
+        
+        return getHostname(authorization, shortId)
             .then(function(hostname){
-                return v1call(path, method, headers, origin, queryStringParameters, body, hostname, 0)
+                return v1call(path, method, headers, origin, queryStringParameters, body, hostname, host, 0)
             })
     }
-}
-
-let checkOrDeploy = (authorization, shortId) => {
-    var headers = {
-        "Authorization" : authorization
-    }
-    return new Promise((resolve, reject) => {
-        // TODO coger el cluster id del hostname
-        axios({
-            method: "GET",
-            url: isthariServer + "/api/deployer-manager/deployer/checkOrDeployByShortId/"+shortId,
-            headers: headers,
-            timeout: 10000
-        }).then(function(response){
-            resolve(response)
-        }).catch(function(error){
-            console.log("failure in authentication 1");
-            console.log ("Server "+isthariServer)
-            reject(error)
-        })
-    })
 }
 
 let getHostname = (authorization, shortId) => {
@@ -119,7 +96,7 @@ let getHostname = (authorization, shortId) => {
         }
         axios({
             method: "GET",
-            url: isthariServer + "/api/deployer-manager/deployer/getHostnameByShortId/"+shortId+"/master",
+            url: isthariServer + "/api/deployer-manager/deployer/getHostnameByShortId/"+shortId+"/master?deploy=true",
             headers: headers,
             timeout: 10000
         }).then(function(response){
@@ -134,7 +111,7 @@ let getHostname = (authorization, shortId) => {
 }
 
 
-let v1call = (path, method, headers, origin, queryStringParameters, body, hostname, tries) => {
+let v1call = (path, method, headers, origin, queryStringParameters, body, hostname, originalHost, tries) => {
     return new Promise((resolve, reject) => {
         var finalUrl = "http://"+hostname+":8080"+path
         
@@ -157,7 +134,6 @@ let v1call = (path, method, headers, origin, queryStringParameters, body, hostna
         
         delete headers.authorization
         delete headers.Authorization
-        originalHost = headers.host;
         delete headers.host
         headers.host = hostname+":8080"
         
@@ -204,7 +180,7 @@ let v1call = (path, method, headers, origin, queryStringParameters, body, hostna
             console.log(error);
             setTimeout(function() {
                     if(tries<300) {
-                        resolve(v1call(path, method, headers, origin, queryStringParameters, body, hostname, 0))
+                        resolve(v1call(path, method, headers, origin, queryStringParameters, body, hostname, originalHost, 0))
                     } else {
                         reject(error)
                     }

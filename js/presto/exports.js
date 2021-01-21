@@ -36,6 +36,11 @@ exports.handler = async (event) => {
     if (staticContentCheck != null){
         return staticContentCheck
     }
+    
+    var pathCheck = checkPath(path);
+    if (pathCheck != null){
+        return pathCheck;
+    }
         
     var securityCheck = checkSecurity(headers);
     if (securityCheck != null){
@@ -88,6 +93,20 @@ function checkStaticContent(path) {
     }
 }
 
+function checkPath(path) {
+    if (path.length==0 
+      || path=='/'
+      || path=='/ui') {
+        return {
+            statusCode: 301,
+	    headers: {
+	        "Location": "/ui/"
+	    },
+	    body: "OK"
+        }
+    }
+}
+
 function checkSecurity(headers) {
     if (headers.authorization == null) {
         console.log("no authorization header")
@@ -124,9 +143,8 @@ let getHostname = (originalHeaders, shortId) => {
 
 let v1call = (path, method, headers, origin, queryStringParameters, body, hostname, originalHost, tries) => {
     return new Promise((resolve, reject) => {
-        var finalUrl = "http://"+hostname+":8080"+path
-        
-        console.log("---")
+    
+        var finalUrl = "http://"+hostname+":8080"+path        
         var temp = ""
         Object.keys(queryStringParameters).forEach(function (key){
             console.log(key)
@@ -135,13 +153,11 @@ let v1call = (path, method, headers, origin, queryStringParameters, body, hostna
             }
             temp += key+"="+queryStringParameters[key]
         })
-        console.log(temp)
-	console.log("***")
         finalUrl = finalUrl + "?" + temp
         console.log("final url "+finalUrl)
         
-        console.log("pre modify request headers");
-        console.log(headers);
+        //console.log("pre modify request headers");
+        //console.log(headers);
         
         delete headers.authorization
         delete headers.Authorization

@@ -25,25 +25,14 @@ exports.handler = async (event) => {
     
     delete headers["x-forwarded-for"]
     
-    var origin = "https://saas.isthari.com";
-    if (headers.origin=="http://localhost:5001"){
-        origin = "http://localhost:5001"
-    } else {
-        origin = "https://saas.isthari.com"
+    var origin = checkOrigin(headers);
+    
+    var optionsCheck = checkOptions(method, origin);
+    if (optionsCheck != null){
+        return optionsCheck;
     }
     
-    if (method == "OPTIONS") {
-      return {
-          statusCode: 204,
-          headers: {
-              "Access-Control-Allow-Origin" : origin,
-              "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-              // authorization,x-presto-catalog,x-presto-schema,x-presto-user
-              "Access-Control-Allow-Headers": "*"
-          },
-          body: "OK"
-      }  
-    } else {
+
         if (path.startsWith("/ui/dist")) {
           path = path.replace("/ui/dist","");
 	  redirectUrl = "https://saas-content.isthari.com/content/presto/350"+path;
@@ -66,6 +55,30 @@ exports.handler = async (event) => {
             .then(function(hostname){
                 return v1call(path, method, headers, origin, queryStringParameters, body, hostname, host, 0)
             })
+
+}
+
+function checkOrigin(headers) {
+    var origin = "https://saas.isthari.com";
+    if (headers.origin=="http://localhost:5001"){
+        origin = "http://localhost:5001"
+    } else {
+        origin = "https://saas.isthari.com"
+    }
+    return origin;
+}
+
+function checkOptions(method, origin) {
+    if (method == "OPTIONS") {
+        return {
+            statusCode: 204,
+            headers: {
+                "Access-Control-Allow-Origin" : origin,
+                "Access-Control-Allow-Methods": "POST, GET, OPTIONS",  
+                "Access-Control-Allow-Headers": "*"
+            },
+            body: "OK"
+        }  
     }
 }
 
@@ -93,11 +106,10 @@ let getHostname = (originalHeaders, shortId) => {
             headers: headers,
             timeout: 10000
         }).then(function(response){
-            console.log("Retrieved hostname "+response.data)
-            console.log(response.data)
+            console.log("Retrieved hostname "+response.data.privateIp)
             resolve(response.data.privateIp)
         }).catch(function(error){
-            console.log("failure in authentication 2");
+            console.log("failure in authentication");
             reject(error)
         })
     })

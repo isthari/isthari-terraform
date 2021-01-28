@@ -48,6 +48,9 @@ exports.handler = async (event) => {
     }
         
     return getHostname(headers, shortId)
+    	.then(function(hostname){
+    	    return checkRunning(hostname);
+    	})
         .then(function(hostname){
             return v1call(path, method, headers, origin, queryStringParameters, body, hostname, host, 0)
         })
@@ -140,6 +143,24 @@ let getHostname = (originalHeaders, shortId) => {
     })
 }
 
+let checkRunning = (hostname) => {
+    return new Promise((resolve, reject) =>
+    {
+        axios({
+            method: "GET",
+            url: "http://"+hostname+":8080/ui/api/query",
+            timeout: 10000
+        }).then(function(response){
+            console.log("Status running");
+            resolve(hostname)
+        }).catch(function(error){
+            console.log("Starting");
+            setTimeout(function(){
+                resolve(checkRunning(hostname));
+            }, 1000);
+        })
+    })
+}
 
 let v1call = (path, method, headers, origin, queryStringParameters, body, hostname, originalHost, tries) => {
     return new Promise((resolve, reject) => {

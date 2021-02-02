@@ -47,7 +47,7 @@ exports.handler = async (event) => {
         return securityCheck;
     }
         
-    return getHostname(headers, shortId)
+    return getHostname(headers, shortId, path)
     	.then(function(hostname){
     	    return checkRunning(hostname);
     	})
@@ -122,15 +122,19 @@ function checkSecurity(headers) {
     }    
 }
 
-let getHostname = (originalHeaders, shortId) => {
+let getHostname = (originalHeaders, shortId, path) => {
     return new Promise((resolve, reject) =>
     {
         var headers = {
             "Authorization" : originalHeaders.authorization
         }
+        
+        var deploy = (path.startsWith("/ui") || path.startsWith("/favicon"))?false: true;
+        console.log(path + " force deploy "+deploy);
+        
         axios({
             method: "GET",
-            url: isthariServer + "/api/deployer-manager/deployer/getHostnameByShortId/"+shortId+"/master?deploy=true",
+            url: isthariServer + "/api/deployer-manager/deployer/getHostnameByShortId/"+shortId+"/master?deploy="+deploy,
             headers: headers,
             timeout: 10000
         }).then(function(response){

@@ -111,7 +111,14 @@ function checkPath(path) {
 }
 
 function checkSecurity(headers) {
-    if (headers.authorization == null) {
+    	var cookies = getCookiesFromHeader(headers);
+    	var accessToken = cookies["access_token"];
+    	if (accessToken != null) {
+    	    console.log("authorize with access_token cookie");
+    	    headers.authorization = "Bearer "+accessToken;
+    	}
+
+    if (headers.authorization == null) {       	    	    
         console.log("no authorization header")
         return {
             statusCode: 401,
@@ -121,6 +128,28 @@ function checkSecurity(headers) {
         }
     }    
 }
+
+function getCookiesFromHeader(headers) {
+
+    if (headers === null || headers === undefined || headers.cookie === undefined) {
+        return {};
+    }
+
+    // Split a cookie string in an array
+    var list = {}
+    var rc = headers.cookie;
+   
+    rc && rc.split(';').forEach(function( cookie ) {
+        var parts = cookie.split('=');
+        var key = parts.shift().trim()
+        var value = decodeURI(parts.join('='));   
+        if (key != '') {
+            list[key] = value
+        }
+    });
+
+    return list;
+};
 
 let getHostname = (originalHeaders, shortId, path) => {
     return new Promise((resolve, reject) =>

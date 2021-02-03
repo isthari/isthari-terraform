@@ -58,8 +58,8 @@ exports.handler = async (event) => {
 
 function checkOrigin(headers) {
     var origin = "https://saas.isthari.com";
-    if (headers.origin=="http://localhost:5001"){
-        origin = "http://localhost:5001"
+    if (headers.origin!=null && headers.origin.startsWith("http://localhost")) {
+        origin = headers.origin;
     } else {
         origin = "https://saas.isthari.com"
     }

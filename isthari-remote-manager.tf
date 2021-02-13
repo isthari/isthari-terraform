@@ -71,6 +71,16 @@ resource "aws_iam_policy" "isthari-remote-manager-EC2" {
         "iam:ListInstanceProfiles"
       ],
       "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [ "logs:DescribeLogGroups" ],
+      "Resource": [ "arn:aws:logs:${var.region}:${data.aws_caller_identity.current.account_id}:log-group:*" ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [ "logs:DescribeLogStreams", "logs:GetLogEvents"],
+      "Resource": [ "arn:aws:logs:${var.region}:${data.aws_caller_identity.current.account_id}:log-group:*:*" ]
     }
   ]
 }

@@ -53,7 +53,7 @@ EOF
 # cloudwatch log group
 resource "aws_cloudwatch_log_group" "presto" {
   name              = "/aws/lambda/${aws_lambda_function.presto.function_name}"
-  retention_in_days = 1
+  retention_in_days = var.retentionInDays 
 }
 
 # attach policy

@@ -1,1 +1,5 @@
 /dist/presto.zip
+/deploy-local.sh
+/undeploy-local.sh
+/.terraform
+/dist/

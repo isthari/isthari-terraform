@@ -123,7 +123,7 @@ function checkSecurity(headers) {
         return {
             statusCode: 401,
                 headers: {
-                    "WWW-Authenticate": "Basic realm=\"User Visible Realm\""
+                    "WWW-Authenticate": "Basic realm=\"Isthari\""
                 }
         }
     }    

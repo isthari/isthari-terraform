@@ -78,7 +78,7 @@ resource "aws_lambda_function" "presto" {
   timeout          = 300
 
   vpc_config {
-    subnet_ids         = [aws_subnet.private-1.id]
+    subnet_ids         = [aws_subnet.private-1.id, aws_subnet.private-2.id]
     security_group_ids = [ aws_security_group.lambda.id ]
   }
 }

@@ -1,0 +1,15 @@
+{
+  "name": "livy-proxy",
+  "version": "1.0.0",
+  "description": "livy-proxy",
+  "main": "exports.js",
+  "dependencies": {
+    "axios": "^0.16.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

@@ -47,6 +47,14 @@ variable "vpc_private_2_net" {
 }
 
 ##
+## Log configuration
+##
+variable "retentionInDays" {
+  type    = string
+  default = "7"
+}
+
+##
 ## AUTOMATIC VARIABLES DO NOT MODIFY
 ## 
 variable "api-server" {

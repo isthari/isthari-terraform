@@ -27,12 +27,6 @@ resource "aws_iam_role_policy_attachment" "instance-events" {
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchEventsFullAccess"
 }
 
-# send logs to cloud watchs
-resource "aws_iam_role_policy_attachment" "instance-logs" {
-  role       = aws_iam_role.instance.name
-  policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
-}
-
 # access S3 bucket
 resource "aws_iam_policy" "instance-s3" {
   name        = "isthari-${var.shortId}-instance-s3"
@@ -64,3 +58,34 @@ resource "aws_iam_role_policy_attachment" "instance-s3" {
   policy_arn = aws_iam_policy.instance-s3.arn
 }
 
+# write permissions in cloudwatch
+resource "aws_iam_policy" "instance-logs" {
+  name        = "isthari-${var.shortId}-instance-logs"
+  path        = "/"
+  description = "isthari-${var.shortId}-instance-logs"
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "CloudWatchLogGroups",
+            "Effect": "Allow",
+            "Action": [ "logs:DescribeLogGroups", "logs:CreateLogGroup", "logs:PutRetentionPolicy" ],
+            "Resource": [ "arn:aws:logs:${var.region}:${data.aws_caller_identity.current.account_id}:log-group:*" ]
+        },
+        {
+            "Sid": "CloudWatchLogs",
+            "Effect": "Allow",
+            "Action": [ "logs:CreateLogStream", "logs:PutLogEvents", "logs:DecribeLogGroups" ],
+            "Resource": [ "arn:aws:logs:${var.region}:${data.aws_caller_identity.current.account_id}:log-group:*:*" ]
+        }
+
+    ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "instance-logs" {
+  role       = aws_iam_role.instance.name
+  policy_arn = aws_iam_policy.instance-logs.arn
+}

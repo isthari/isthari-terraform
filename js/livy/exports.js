@@ -173,7 +173,7 @@ let v1call = (path, method, headers, origin, queryStringParameters, body, hostna
                 url: finalUrl,
                 headers: headers,
                 data: body,
-                timeout: 1000
+                timeout: 5000
             })
             .then(function(response) {
                 var body;
